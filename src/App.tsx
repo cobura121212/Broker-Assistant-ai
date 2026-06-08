@@ -53,12 +53,39 @@ export default function App() {
   const fetchDb = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/db');
-      const data: AppDatabase = await res.json();
-      setCustomers(data.customers || []);
-      setProperties(data.properties || []);
-      setSchedules(data.schedules || []);
-      setSmsLogs(data.smsLogs || []);
+      // 1. Fetch server state (useful as starting pre-seeds)
+      let serverData: AppDatabase | null = null;
+      try {
+        const res = await fetch('/api/db');
+        if (res.ok) {
+          serverData = await res.json();
+        }
+      } catch (backendErr) {
+        console.warn("백엔드 수신 불가 (안심 로컬스토리지 활용 가능):", backendErr);
+      }
+
+      // 2. Load from localStorage if present to ensure serverless state persistent
+      const localRaw = localStorage.getItem('C21_CRM_DB');
+      if (localRaw) {
+        try {
+          const localData: AppDatabase = JSON.parse(localRaw);
+          setCustomers(localData.customers || []);
+          setProperties(localData.properties || []);
+          setSchedules(localData.schedules || []);
+          setSmsLogs(localData.smsLogs || []);
+          return;
+        } catch (e) {
+          console.error("로컬스토리지 복원 실패:", e);
+        }
+      }
+
+      // 3. Roll back to server pre-seeds if no custom local storage exists
+      if (serverData) {
+        setCustomers(serverData.customers || []);
+        setProperties(serverData.properties || []);
+        setSchedules(serverData.schedules || []);
+        setSmsLogs(serverData.smsLogs || []);
+      }
     } catch (err) {
       console.error("대동기화 실패:", err);
     } finally {
@@ -66,16 +93,20 @@ export default function App() {
     }
   };
 
-  // Dispatch full DB state to Express API
+  // Dispatch full DB state to Express API and local sandbox
   const saveDb = async (updatedDb: AppDatabase) => {
     try {
+      // 1. Immediate offline backup
+      localStorage.setItem('C21_CRM_DB', JSON.stringify(updatedDb));
+
+      // 2. Upload to central API (stateful Cloud Run)
       await fetch('/api/db', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedDb)
       });
     } catch (err) {
-      console.error("백엔드 저장 실패:", err);
+      console.warn("백엔드 장부 저장 실패 (로컬 디바이스에 데이터 자동 보관됨):", err);
     }
   };
 

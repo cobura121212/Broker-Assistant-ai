@@ -142,7 +142,11 @@ function getInitialDb() {
 function getDb() {
   if (!fs.existsSync(DB_FILE)) {
     const data = getInitialDb();
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+    } catch (e) {
+      console.warn("Could not write initial DB file to disk (might be on stateless/read-only filesystem):", e);
+    }
     return data;
   }
   try {
@@ -150,13 +154,21 @@ function getDb() {
     return JSON.parse(raw);
   } catch (err) {
     const data = getInitialDb();
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+    } catch (e) {
+      console.warn("Could not write fallback DB file to disk:", e);
+    }
     return data;
   }
 }
 
 function writeDb(data: any) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch (err) {
+    console.warn("Could not write DB file to disk (might be on stateless/read-only filesystem):", err);
+  }
 }
 
 // GET DB
@@ -455,6 +467,11 @@ app.post("/api/ai/legal", async (req, res) => {
 
 // Setup Vite & Static Assets serving
 async function startServer() {
+  if (process.env.NETLIFY) {
+    console.log("NETLIFY build/run detected. Skipping server.listen() in server.ts");
+    return;
+  }
+
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -475,3 +492,5 @@ async function startServer() {
 }
 
 startServer();
+
+export { app };
