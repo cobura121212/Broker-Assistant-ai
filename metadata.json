@@ -1,0 +1,8 @@
+{
+  "name": "중개비서 AI",
+  "description": "공인중개사의 고객관리(CRM), 매물관리, 일정 및 수수료 관리, 계약서 및 명함 OCR 판독, 단체 안부문자, AI 부동산 상시 법률 컨설팅 업무를 해결하는 지능형 업무 비서 플랫폼",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

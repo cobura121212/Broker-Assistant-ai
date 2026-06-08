@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Lora", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Natural Tones custom palette mappings to standard colors used in the app */
+  /* This guarantees all elements align nicely instantly */
+  --color-orange-50: #F3F7F4;
+  --color-orange-100: #E4ECE7;
+  --color-orange-200: #C2D5C8;
+  --color-orange-300: #93B59D;
+  --color-orange-400: #669273;
+  --color-orange-500: #3E5A48; /* Primary Accent: Forest Sage Green */
+  --color-orange-600: #304638; /* Deeper Sage Green */
+  --color-orange-700: #25362B;
+  --color-orange-800: #19241D;
+  --color-orange-950: #0E1510;
+
+  --color-amber-50: #FAF7F2;   /* Main Page/Card backgrounds */
+  --color-amber-100: #F3ECE2;  /* Light Sand accent */
+  --color-amber-200: #E7DBCA;  /* Soft Clay divider/border */
+  --color-amber-300: #D8C3A5;  /* Sandy clay border */
+  --color-amber-400: #C9A67C;  /* Warm Ochre */
+  --color-amber-500: #B78752;  /* Hazel / Warm soil */
+  --color-amber-600: #9C6F3F;  /* Earth brown */
+  --color-amber-700: #7A532C;
+  --color-amber-800: #593D1E;
+  --color-amber-900: #422D15;
+  --color-amber-950: #271A0B;
+
+  --color-stone-50: #FAF8F5;   /* Very soft ivory bone */
+  --color-stone-100: #F1ECE3;  /* Warm light beige sandstone */
+  --color-stone-150: #E5DEC0;  /* Soft lichen stone border */
+  --color-stone-200: #DFD7C7;  /* Warm sand */
+  --color-stone-250: #CFCECA;  /* Muted grey-stone */
+  --color-stone-300: #BFB7A6;  /* Dune taupe */
+  --color-stone-400: #8E8675;  /* Clay gray */
+  --color-stone-500: #787060;  /* Muted warm taupe */
+  --color-stone-600: #5D5649;  /* Soft charcoal espresso */
+  --color-stone-700: #4B453A;  /* Deep warm charcoal */
+  --color-stone-800: #353028;  /* Near espresso text */
+  --color-stone-900: #1F1C18;  /* Warm rich black */
+}
+
+/* Base style enhancements for beautiful Natural Tones typography and scrolling */
+body {
+  background-color: var(--color-stone-50);
+  color: var(--color-stone-850);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Serif font integration for headers */
+.font-serif-header {
+  font-family: var(--font-serif);
+}
